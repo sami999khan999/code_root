@@ -9,6 +9,7 @@ const scanner = require('./scanner');
 const { getConfig, scanOptions } = require('./config');
 const { ProjectTree, tildify } = require('./tree');
 const { Recent } = require('./recent');
+const { nameParts, folderNameProblem } = require('./names');
 
 const VIEW_ID = 'codeRoot.tree';
 const WELCOMED_KEY = 'codeRoot.welcomed';
@@ -168,9 +169,58 @@ function activate(context) {
     return openFolder(pathOf(target(arg)), newWindow);
   }
 
+  /** Where New Folder creates: inside a folder or the root, next to a project. */
+  function newFolderParent(node) {
+    const { root } = getConfig();
+    if (!node || node.type === 'group') return root;
+    return node.entry.kind === 'folder' ? node.entry.path : path.dirname(node.entry.path);
+  }
+
+  async function newFolder(arg) {
+    if (rootState() !== 'ready') return selectRoot();
+    const parent = newFolderParent(target(arg));
+    const value = await vscode.window.showInputBox({
+      title: 'New Folder',
+      prompt: `In ${tildify(parent)}  ·  a/b makes nested folders`,
+      placeHolder: 'my_app-nextjs',
+      validateInput: (v) => (v.trim() ? folderNameProblem(v, parent) : undefined),
+    });
+    if (value === undefined) return;
+    const problem = folderNameProblem(value, parent);
+    if (problem) {
+      vscode.window.showErrorMessage(problem);
+      return;
+    }
+
+    const folder = path.join(parent, ...nameParts(value));
+    try {
+      await fs.promises.mkdir(folder, { recursive: true });
+    } catch (err) {
+      vscode.window.showErrorMessage(`Couldn't create ${tildify(folder)}: ${err.message}`);
+      return;
+    }
+    tree.refresh();
+
+    const entry = await scanner.describe(folder, scanOptions());
+    if (entry) {
+      try {
+        await view.reveal({ type: 'entry', entry }, { select: true, focus: true, expand: false });
+      } catch {
+        // Not in the tree (a hidden or excluded name): the message below still says where it is.
+      }
+    }
+    const choice = await vscode.window.showInformationMessage(
+      `Created ${tildify(folder)}`,
+      'Open Here',
+      'Open in New Window',
+    );
+    if (choice) openFolder(folder, choice === 'Open in New Window');
+  }
+
   const commands = {
     'codeRoot.selectRoot': selectRoot,
     'codeRoot.refresh': update,
+    'codeRoot.newFolder': newFolder,
     'codeRoot.find': findProject,
     'codeRoot.open': (arg) => openCommand(arg, false),
     'codeRoot.openNewWindow': (arg) => openCommand(arg, true),

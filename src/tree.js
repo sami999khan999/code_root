@@ -85,6 +85,22 @@ class ProjectTree {
     return entries.map((entry) => ({ type: 'entry', entry }));
   }
 
+  /**
+   * The node holding `node` in the root tree, so a new folder can be revealed.
+   * Recent items and groups are top-level. Parents are matched by TreeItem id,
+   * so fresh node objects work.
+   */
+  async getParent(node) {
+    const { root } = getConfig();
+    if (!node || node.type === 'group' || node.openedAt) return undefined;
+    const parent = path.dirname(node.entry.path);
+    if (parent === root) return { type: 'group', id: 'root' };
+    const rel = path.relative(root, parent);
+    if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return undefined;
+    const entry = await scanner.describe(parent, scanOptions());
+    return entry ? { type: 'entry', entry } : undefined;
+  }
+
   async _recentNodes() {
     const items = this.recent.list().slice(0, getConfig().recentCount);
     const described = await Promise.all(

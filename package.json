@@ -2,7 +2,7 @@
   "name": "code-root",
   "displayName": "Code Root",
   "description": "Browse every project under one root folder and open it in this window or a new one",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "ProdigyCorp",
   "icon": "media/icon.png",
   "license": "MIT",
@@ -82,6 +82,12 @@
         "icon": "$(search)"
       },
       {
+        "command": "codeRoot.newFolder",
+        "title": "New Folder…",
+        "category": "Code Root",
+        "icon": "$(new-folder)"
+      },
+      {
         "command": "codeRoot.refresh",
         "title": "Refresh",
         "category": "Code Root",
@@ -130,6 +136,11 @@
     "menus": {
       "view/title": [
         {
+          "command": "codeRoot.newFolder",
+          "when": "view == codeRoot.tree && codeRoot.state == ready",
+          "group": "navigation@0"
+        },
+        {
           "command": "codeRoot.find",
           "when": "view == codeRoot.tree && codeRoot.state == ready",
           "group": "navigation@1"
@@ -156,6 +167,16 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "codeRoot.newFolder",
+          "when": "view == codeRoot.tree && viewItem == rootGroup",
+          "group": "inline"
+        },
+        {
+          "command": "codeRoot.newFolder",
+          "when": "view == codeRoot.tree && viewItem =~ /^(project|folder|rootGroup)/",
+          "group": "0_new"
+        },
         {
           "command": "codeRoot.open",
           "when": "view == codeRoot.tree && viewItem =~ /^(project|folder)/",
@@ -250,6 +271,12 @@
         "command": "codeRoot.clearRecent",
         "key": "ctrl+shift+delete",
         "mac": "cmd+shift+backspace",
+        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus"
+      },
+      {
+        "command": "codeRoot.newFolder",
+        "key": "shift+alt+n",
+        "mac": "alt+cmd+n",
         "when": "focusedView == codeRoot.tree && listFocus && !inputFocus"
       },
       {

@@ -29,6 +29,7 @@ projects you can open in this window or a new one, without ever touching a file 
 | 🕘 **Recent** | The projects you opened last sit at the top, even ones you opened from the terminal. |
 | 🔍 **Find Project** | `Ctrl+Alt+O` searches every project under the root. `Enter` opens it here, `Ctrl+Enter` opens a new window. |
 | ⌨️ **Shortcuts for everything** | Every action has a key, and every key can be remapped. |
+| 📁 **New Folder** | Make a folder right from the tree: inside a folder, or next to a project. `a/b` makes nested folders; then open it here or in a new window. |
 | 📋 **Path tools** | Reveal in File Manager and Copy Path from the right-click menu or the keyboard. |
 | 🪶 **Featherweight** | Plain JavaScript, no build step, no dependencies. |
 
@@ -42,10 +43,10 @@ Code Root recognizes a project by its files and labels it:
 
 ## 📦 Install
 
-Download [`release/code-root-0.2.0.vsix`](release/code-root-0.2.0.vsix) from this repo, then either:
+Download [`release/code-root-0.3.0.vsix`](release/code-root-0.3.0.vsix) from this repo, then either:
 
 ```bash
-code --install-extension release/code-root-0.2.0.vsix
+code --install-extension release/code-root-0.3.0.vsix
 ```
 
 or in VS Code open the Extensions view, click **···** → **Install from VSIX…** and pick the file.
@@ -79,6 +80,7 @@ In the Projects view these work on projects and folders; expand a folder with `�
 
 | Action | Linux / Windows | macOS |
 | --- | --- | --- |
+| New Folder | `Shift+Alt+N` | `Alt+Cmd+N` |
 | Reveal in File Manager | `Shift+Alt+R` | `Alt+Cmd+R` |
 | Copy Path | `Shift+Alt+C` | `Alt+Cmd+C` |
 | Remove from Recent | `Delete` | `Cmd+Backspace` |

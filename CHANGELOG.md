@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- **New Folder**: a button at the top of the sidebar and on the root folder, **New Folder…** in the
+  right-click menu, and `Shift+Alt+N` in the Projects view. It creates inside the selected folder
+  (or the root), or next to a selected project. `a/b` makes nested folders. Names that already
+  exist or that Windows can't use are refused as you type. The new folder is selected in the tree
+  and can be opened here or in a new window straight away.
+
 ## 0.2.0
 
 - Keyboard shortcuts for every command, all remappable in the Keyboard Shortcuts editor.
