@@ -5,7 +5,8 @@
 - Keyboard shortcuts for every command, all remappable in the Keyboard Shortcuts editor.
 - Tree commands work from the keyboard on the selected item.
 - New **Keyboard Shortcuts** command opens the editor filtered to Code Root; it's a button in the sidebar view.
-- Find Project results have Open Here and Open in New Window buttons, bound to `Enter` and `Ctrl+Enter`.
+- Find Project results have Open Here and Open in New Window buttons.
+- Open Here is `Enter` and Open in New Window is `Ctrl+Enter`, in both Find Project and the sidebar; one remap changes both.
 
 ## 0.1.0
 

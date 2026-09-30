@@ -152,23 +152,28 @@ function activate(context) {
     });
   }
 
-  /** Open the highlighted Find Project result; bound to keys while the picker is up. */
-  function openFromFind(newWindow) {
-    const pick = activePick;
-    const [item] = pick ? pick.activeItems : [];
-    if (!item) return;
-    pick.hide();
-    openFolder(item.path, newWindow);
+  /**
+   * Open/Open in New Window share keys between the tree and Find Project:
+   * with no argument, act on the highlighted result if the picker is up,
+   * otherwise on the tree selection.
+   */
+  function openCommand(arg, newWindow) {
+    if (!arg && activePick) {
+      const pick = activePick;
+      const [item] = pick.activeItems;
+      if (!item) return;
+      pick.hide();
+      return openFolder(item.path, newWindow);
+    }
+    return openFolder(pathOf(target(arg)), newWindow);
   }
 
   const commands = {
     'codeRoot.selectRoot': selectRoot,
     'codeRoot.refresh': update,
     'codeRoot.find': findProject,
-    'codeRoot.findOpenHere': () => openFromFind(false),
-    'codeRoot.findOpenNewWindow': () => openFromFind(true),
-    'codeRoot.open': (arg) => openFolder(pathOf(target(arg)), false),
-    'codeRoot.openNewWindow': (arg) => openFolder(pathOf(target(arg)), true),
+    'codeRoot.open': (arg) => openCommand(arg, false),
+    'codeRoot.openNewWindow': (arg) => openCommand(arg, true),
     'codeRoot.revealInOS': (arg) => {
       const p = pathOf(target(arg));
       if (p) vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(p));

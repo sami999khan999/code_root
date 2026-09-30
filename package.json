@@ -82,16 +82,6 @@
         "icon": "$(search)"
       },
       {
-        "command": "codeRoot.findOpenHere",
-        "title": "Find Project: Open Here",
-        "category": "Code Root"
-      },
-      {
-        "command": "codeRoot.findOpenNewWindow",
-        "title": "Find Project: Open in New Window",
-        "category": "Code Root"
-      },
-      {
         "command": "codeRoot.refresh",
         "title": "Refresh",
         "category": "Code Root",
@@ -212,9 +202,7 @@
         { "command": "codeRoot.openNewWindow", "when": "false" },
         { "command": "codeRoot.revealInOS", "when": "false" },
         { "command": "codeRoot.copyPath", "when": "false" },
-        { "command": "codeRoot.removeFromRecent", "when": "false" },
-        { "command": "codeRoot.findOpenHere", "when": "false" },
-        { "command": "codeRoot.findOpenNewWindow", "when": "false" }
+        { "command": "codeRoot.removeFromRecent", "when": "false" }
       ]
     },
     "keybindings": [
@@ -224,32 +212,21 @@
         "mac": "cmd+alt+o"
       },
       {
-        "command": "codeRoot.findOpenHere",
-        "key": "enter",
-        "when": "inQuickOpen && codeRoot.finding"
-      },
-      {
-        "command": "codeRoot.findOpenNewWindow",
-        "key": "ctrl+enter",
-        "mac": "cmd+enter",
-        "when": "inQuickOpen && codeRoot.finding"
-      },
-      {
         "command": "codeRoot.tree.focus",
         "key": "ctrl+shift+alt+o",
         "mac": "cmd+shift+alt+o"
       },
       {
         "command": "codeRoot.open",
-        "key": "shift+enter",
-        "mac": "shift+enter",
-        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus && codeRoot.selection =~ /^(project|folder)/"
+        "key": "enter",
+        "mac": "enter",
+        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus && codeRoot.selection =~ /^(project|folder)/ || inQuickOpen && codeRoot.finding"
       },
       {
         "command": "codeRoot.openNewWindow",
         "key": "ctrl+enter",
         "mac": "cmd+enter",
-        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus && codeRoot.selection =~ /^(project|folder)/"
+        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus && codeRoot.selection =~ /^(project|folder)/ || inQuickOpen && codeRoot.finding"
       },
       {
         "command": "codeRoot.revealInOS",

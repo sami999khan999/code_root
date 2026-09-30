@@ -66,20 +66,19 @@ editor showing only Code Root's commands, then double-click one to rebind it.
 | Show the Projects view | `Ctrl+Shift+Alt+O` | `Cmd+Shift+Alt+O` |
 | Keyboard Shortcuts | `Ctrl+K Ctrl+Alt+O` | `Cmd+K Cmd+Alt+O` |
 
-**In Find Project**
+**Opening** (same keys in Find Project and the Projects view, so one remap changes both)
 
 | Action | Linux / Windows | macOS |
 | --- | --- | --- |
 | Open Here | `Enter` | `Enter` |
 | Open in New Window | `Ctrl+Enter` | `Cmd+Enter` |
 
+In the Projects view these work on projects and folders; expand a folder with `→`.
+
 **With the Projects view focused** (acts on the selected item)
 
 | Action | Linux / Windows | macOS |
 | --- | --- | --- |
-| Open project (folders expand) | `Enter` | `Enter` |
-| Open Here (projects and folders) | `Shift+Enter` | `Shift+Enter` |
-| Open in New Window | `Ctrl+Enter` | `Cmd+Enter` |
 | Reveal in File Manager | `Shift+Alt+R` | `Alt+Cmd+R` |
 | Copy Path | `Shift+Alt+C` | `Alt+Cmd+C` |
 | Remove from Recent | `Delete` | `Cmd+Backspace` |
@@ -95,6 +94,8 @@ editor showing only Code Root's commands, then double-click one to rebind it.
 `codeRoot.selection` holds the selected item's kind for `when` clauses:
 `project`, `folder`, `project.recent`, `folder.recent`, `recentGroup` or `rootGroup`.
 `codeRoot.finding` is true while Find Project is open.
+`codeRoot.open` and `codeRoot.openNewWindow` act on the Find Project result
+while it's open, otherwise on the tree selection.
 
 ```jsonc
 {
