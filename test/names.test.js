@@ -28,3 +28,16 @@ test('an existing folder is refused, a new one inside it is fine', () => {
   assert.match(folderNameProblem('taken', parent), /already exists/);
   assert.strictEqual(folderNameProblem('taken/new', parent), undefined);
 });
+
+const { renameProblem } = require('../src/names');
+
+test('rename: a free name is fine, slashes and taken names are not', () => {
+  fs.mkdirSync(path.join(parent, 'Api'));
+  assert.strictEqual(renameProblem('api_v2', parent, 'Api'), undefined);
+  assert.match(renameProblem('a/b', parent, 'Api'), /renames, it doesn’t move/);
+  assert.match(renameProblem('taken', parent, 'Api'), /already exists/);
+});
+
+test('rename: changing only the case is allowed', () => {
+  assert.strictEqual(renameProblem('API', parent, 'Api'), undefined);
+});

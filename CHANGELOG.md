@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+- **Rename**: `F2` or **Rename…** in the right-click menu renames a folder or project. The name
+  is pre-selected without its stack suffix (`shop` in `shop-nextjs`). Recent entries follow the
+  rename, including projects inside a renamed folder. Renaming the folder this window has open
+  asks first, then reopens the window at the new name. `/` is refused (this renames, it doesn't
+  move); a case-only change is allowed.
+
 ## 0.3.0
 
 - **New Folder**: a button at the top of the sidebar and on the root folder, **New Folder…** in the

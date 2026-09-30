@@ -2,7 +2,7 @@
   "name": "code-root",
   "displayName": "Code Root",
   "description": "Browse every project under one root folder and open it in this window or a new one",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "ProdigyCorp",
   "icon": "media/icon.png",
   "license": "MIT",
@@ -86,6 +86,11 @@
         "title": "New Folder…",
         "category": "Code Root",
         "icon": "$(new-folder)"
+      },
+      {
+        "command": "codeRoot.rename",
+        "title": "Rename…",
+        "category": "Code Root"
       },
       {
         "command": "codeRoot.refresh",
@@ -213,9 +218,14 @@
           "group": "2_path@2"
         },
         {
+          "command": "codeRoot.rename",
+          "when": "view == codeRoot.tree && viewItem =~ /^(project|folder)/",
+          "group": "3_edit"
+        },
+        {
           "command": "codeRoot.removeFromRecent",
           "when": "view == codeRoot.tree && viewItem =~ /\\.recent$/",
-          "group": "3_recent"
+          "group": "4_recent"
         }
       ],
       "commandPalette": [
@@ -223,7 +233,8 @@
         { "command": "codeRoot.openNewWindow", "when": "false" },
         { "command": "codeRoot.revealInOS", "when": "false" },
         { "command": "codeRoot.copyPath", "when": "false" },
-        { "command": "codeRoot.removeFromRecent", "when": "false" }
+        { "command": "codeRoot.removeFromRecent", "when": "false" },
+        { "command": "codeRoot.rename", "when": "false" }
       ]
     },
     "keybindings": [
@@ -278,6 +289,11 @@
         "key": "shift+alt+n",
         "mac": "alt+cmd+n",
         "when": "focusedView == codeRoot.tree && listFocus && !inputFocus"
+      },
+      {
+        "command": "codeRoot.rename",
+        "key": "f2",
+        "when": "focusedView == codeRoot.tree && listFocus && !inputFocus && codeRoot.selection =~ /^(project|folder)/"
       },
       {
         "command": "codeRoot.refresh",

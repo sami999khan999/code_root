@@ -26,4 +26,19 @@ function folderNameProblem(value, parent) {
   return undefined;
 }
 
-module.exports = { nameParts, folderNameProblem };
+/**
+ * Why a folder called `oldName` inside `parent` can't be renamed to `value`,
+ * or undefined when it can. A case-only change ("Api" → "api") is allowed even
+ * where the file system says the new name already exists.
+ */
+function renameProblem(value, parent, oldName) {
+  const name = value.trim();
+  if (/[\\/]/.test(name)) return 'A new name can’t contain / or \\ (this renames, it doesn’t move).';
+  const problem = folderNameProblem(name, parent);
+  if (problem && problem.endsWith('already exists here.') && name.toLowerCase() === oldName.toLowerCase()) {
+    return undefined;
+  }
+  return problem;
+}
+
+module.exports = { nameParts, folderNameProblem, renameProblem };

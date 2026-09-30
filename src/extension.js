@@ -9,7 +9,8 @@ const scanner = require('./scanner');
 const { getConfig, scanOptions } = require('./config');
 const { ProjectTree, tildify } = require('./tree');
 const { Recent } = require('./recent');
-const { nameParts, folderNameProblem } = require('./names');
+const { nameParts, folderNameProblem, renameProblem } = require('./names');
+const { splitName } = require('./stacks');
 
 const VIEW_ID = 'codeRoot.tree';
 const WELCOMED_KEY = 'codeRoot.welcomed';
@@ -217,10 +218,72 @@ function activate(context) {
     if (choice) openFolder(folder, choice === 'Open in New Window');
   }
 
+  async function renameFolder(arg) {
+    const node = target(arg);
+    if (!node || node.type !== 'entry') return;
+    const oldPath = node.entry.path;
+    const parent = path.dirname(oldPath);
+    const oldName = path.basename(oldPath);
+
+    const value = await vscode.window.showInputBox({
+      title: 'Rename',
+      prompt: `Rename ${tildify(oldPath)}`,
+      value: oldName,
+      // Select the name but not a stack suffix: "shop" in "shop-nextjs".
+      valueSelection: [0, splitName(oldName).name.length],
+      validateInput: (v) => renameProblem(v, parent, oldName),
+    });
+    if (value === undefined || value.trim() === oldName) return;
+    const newName = value.trim();
+    const problem = renameProblem(newName, parent, oldName);
+    if (problem) {
+      vscode.window.showErrorMessage(problem);
+      return;
+    }
+    const newPath = path.join(parent, newName);
+
+    // Renaming the folder this window has open would leave the window pointing
+    // at a path that no longer exists, so reopen it at the new one.
+    const openHere = (vscode.workspace.workspaceFolders || []).find((f) => isInside(f.uri.fsPath, oldPath));
+    if (openHere) {
+      const ok = await vscode.window.showWarningMessage(
+        `${oldName} is open in this window. Renaming it reopens the window at the new name.`,
+        { modal: true },
+        'Rename and Reopen',
+      );
+      if (!ok) return;
+    }
+
+    try {
+      await fs.promises.rename(oldPath, newPath);
+    } catch (err) {
+      vscode.window.showErrorMessage(`Couldn't rename ${tildify(oldPath)}: ${err.message}`);
+      return;
+    }
+    await recent.rename(oldPath, newPath);
+    tree.refresh();
+
+    if (openHere) {
+      const reopened = newPath + openHere.uri.fsPath.slice(oldPath.length);
+      await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(reopened), { forceNewWindow: false });
+      return;
+    }
+    const entry = await scanner.describe(newPath, scanOptions());
+    if (entry) {
+      try {
+        await view.reveal({ type: 'entry', entry }, { select: true, focus: true, expand: false });
+      } catch {
+        // Not shown in the tree (hidden or excluded name).
+      }
+    }
+    vscode.window.setStatusBarMessage(`$(check) Renamed to ${newName}`, 3000);
+  }
+
   const commands = {
     'codeRoot.selectRoot': selectRoot,
     'codeRoot.refresh': update,
     'codeRoot.newFolder': newFolder,
+    'codeRoot.rename': renameFolder,
     'codeRoot.find': findProject,
     'codeRoot.open': (arg) => openCommand(arg, false),
     'codeRoot.openNewWindow': (arg) => openCommand(arg, true),
