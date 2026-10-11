@@ -42,10 +42,10 @@ Code Root recognizes a project by its files and labels it:
 
 ## 📦 Install
 
-Download [`code-root-0.2.0.vsix`](code-root-0.2.0.vsix) from this repo, then either:
+Download [`release/code-root-0.2.0.vsix`](release/code-root-0.2.0.vsix) from this repo, then either:
 
 ```bash
-code --install-extension code-root-0.2.0.vsix
+code --install-extension release/code-root-0.2.0.vsix
 ```
 
 or in VS Code open the Extensions view, click **···** → **Install from VSIX…** and pick the file.
@@ -145,7 +145,7 @@ No build step and no dependencies: plain JavaScript in `src/`.
 
 ```bash
 npm test          # scanner and stack tests, plain node
-npm run package   # builds code-root-<version>.vsix
+npm run package   # builds release/code-root-<version>.vsix (commit it)
 ```
 
 Press `F5` in VS Code to run it in an Extension Development Host.
